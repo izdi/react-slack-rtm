@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Django Slack Chat</title>
+</head>
+<body>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% block body %}
+    {% if user.is_anonymous %}
+        <a href='{% url 'login' %}'>Login</a>
+        <a href='{% url 'register' %}'>Register</a>
+    {% endif %}
+    {% if user.slacker.is_slacked %}
+        {% include 'slack.html' %}
+    {% else %}
+        <a href='{% url 'slack_auth' %}'>Get slacked</a>
+    {% endif %}
+{% endblock %}
+</body>
+</html>

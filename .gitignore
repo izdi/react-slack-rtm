@@ -1,0 +1,10 @@
+*.pyc
+.*.swp
+*.sqlite3
+*.sql
+
+### IntelliJ ###
+*.iml
+*.ipr
+*.iws
+.idea/
