@@ -25,8 +25,6 @@ class SlackAuthView(RedirectView):
         return super(SlackAuthView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        import ipdb
-        ipdb.set_trace()
         code = request.GET.get('code')
         if not code:
             return self.auth_request()

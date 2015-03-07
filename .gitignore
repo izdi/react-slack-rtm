@@ -3,8 +3,10 @@
 *.sqlite3
 *.sql
 
-### IntelliJ ###
 *.iml
 *.ipr
 *.iws
-.idea/
+.idea
+
+node_modules
+static/dist/js

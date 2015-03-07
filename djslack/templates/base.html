@@ -1,7 +1,13 @@
+{% load i18n %}
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="{% static 'dist/css/main.css' %}"/>
+
     <title>Django Slack Chat</title>
 </head>
 <body>
@@ -23,5 +29,8 @@
         <a href='{% url 'slack_auth' %}'>Get slacked</a>
     {% endif %}
 {% endblock %}
+
+<script src="{% static 'dist/js/main.js' %}"></script>
+
 </body>
 </html>

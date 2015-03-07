@@ -1,0 +1,32 @@
+{
+  "name": "djslack",
+  "version": "0.0.1",
+  "description": "Slack integration for Django projects using ReactJS as a view layer.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/izdi/djslack.git"
+  },
+  "keywords": [
+    "python",
+    "django",
+    "react",
+    "tornado"
+  ],
+  "author": "izdi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/izdi/djslack/issues"
+  },
+  "homepage": "https://github.com/izdi/djslack",
+  "dependencies": {
+    "gulp": "^3.8.11",
+    "gulp-browserify": "^0.5.1",
+    "gulp-concat": "^2.5.2",
+    "react": "^0.12.2",
+    "reactify": "^1.0.0"
+  }
+}
