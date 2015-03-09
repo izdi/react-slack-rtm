@@ -3,7 +3,7 @@
 var ChatArea = require('./components/ChatArea');
 var React = require('react');
 
-React.renderComponent(
+React.render(
     <ChatArea />,
     document.getElementById('slack-container')
 );

@@ -1,11 +1,12 @@
+import json
 import urllib
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.utils.decorators import method_decorator
-from django.views.generic import RedirectView, View, TemplateView
+from django.views.generic import RedirectView, TemplateView
 from django.contrib import messages
 
 import requests
