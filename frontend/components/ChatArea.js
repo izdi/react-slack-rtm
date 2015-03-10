@@ -3,18 +3,18 @@
 // main components chat rendering
 
 var React = require('react');
-var ws = require('../actions/ws');
 var TextArea = require('./ChatTextArea');
 
 var ChatArea = React.createClass({
     slackConnect: function (evt) {
-        ws.wsInit(this.slackConnected, evt.target);
+        this.props.ws.wsInit(this.slackConnected, evt.target);
     },
 
-    slackConnected: function (el) {
+    slackConnected: function (el, ws) {
         el.innerText = 'Connected';
         this.setState({
-           connectedToSlack: true
+            connectedToSlack: true,
+            ws: ws
         });
     },
 
@@ -26,7 +26,7 @@ var ChatArea = React.createClass({
         return (
             <div className='chat-wrapper'>
                 <button onClick={this.slackConnect}>Connect</button>
-                <TextArea connected={this.state.connectedToSlack}/>
+                <TextArea ws={this.state.ws} connected={this.state.connectedToSlack} />
             </div>
         )
     }

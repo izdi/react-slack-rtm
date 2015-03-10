@@ -6,8 +6,8 @@ exports.wsInit = function wsInit(callback, args) {
         if (xhr.status == 200 && xhr.readyState == 4) {
             var response = JSON.parse(xhr.responseText);
             if (response.ok) {
-                wsActions(JSON.parse(xhr.responseText).url);
-                callback.apply(null, [args])
+                var ws = wsActions(JSON.parse(xhr.responseText).url);
+                callback.apply(null, [args, ws])
             } else {
                 alert(response.error);
             }
@@ -24,6 +24,10 @@ function wsActions(url) {
     ws.onopen = function (data) {
         console.log('WS is opened');
     };
+
     ws.onmessage = function (evt) {
-    }
+        console.log(evt)
+    };
+
+    return ws
 }
