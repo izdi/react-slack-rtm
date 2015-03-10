@@ -1,3 +1,9 @@
-<div id="slack-container" data-st="{{ user.slacker.is_slacked }}"></div>
+{% if not user.is_anonymous %}
+    {% if user.slacker.is_slacked %}
+        <div id="slack-container" data-st="{{ user.slacker.is_slacked }}"></div>
+    {% else %}
+        <a href='{% url 'slack_auth' %}'>Get slacked</a>
+    {% endif %}
+{% endif %}
 
 

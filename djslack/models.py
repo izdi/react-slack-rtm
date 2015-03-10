@@ -8,3 +8,6 @@ class SlackUser(models.Model):
 
     def is_slacked(self):
         return self.access_token
+
+    def __unicode__(self):
+        return self.slacker

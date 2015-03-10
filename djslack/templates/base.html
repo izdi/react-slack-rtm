@@ -23,11 +23,9 @@
         <a href='{% url 'login' %}'>Login</a>
         <a href='{% url 'register' %}'>Register</a>
     {% endif %}
-    {% if user.slacker.is_slacked %}
-        {% include 'slack.html' %}
-    {% else %}
-        <a href='{% url 'slack_auth' %}'>Get slacked</a>
-    {% endif %}
+
+    {% include 'slack.html' %}
+
 {% endblock %}
 
 <script src="{% static 'dist/js/main.js' %}"></script>
