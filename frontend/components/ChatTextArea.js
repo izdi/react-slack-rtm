@@ -1,5 +1,7 @@
 /** @jsx React.DOM */
 
+'use strict';
+
 // responsible for message rendering
 
 var React = require('react');
@@ -30,10 +32,8 @@ var TextArea = React.createClass({
 
         return (
             <div style={chatArea}>
-                <textarea rows='7' cols='50'></textarea>
-                <input type='text' id='channel' />
                 <input type='text' id='text' />
-                <input type='button' onClick={this.sendData}/>
+                <input type='button' onClick={this.sendData} value='Send' />
             </div>
 
         )

@@ -2,9 +2,9 @@
 
 var ChatArea = require('./components/ChatArea');
 var React = require('react');
-var ws = require('./actions/ws');
+var webSocket = require('./actions/ws');
 
 React.render(
-    <ChatArea ws={ws} />,
+    <ChatArea webSocket={webSocket} />,
     document.getElementById('slack-container')
 );
