@@ -26,7 +26,7 @@ var ChatNavPane = React.createClass({
 
         return (
             <div>
-                <button id='slack-con-btn' onClick={this.props.slackConnectHandler}>{this.props.btnConText}</button>
+                <button onClick={this.props.slackConnectHandler}>{this.props.btnConText}</button>
                 <div style={navHidden}>
                     <ul>{this.props.channels.map(renderChannels)}</ul>
                 </div>
