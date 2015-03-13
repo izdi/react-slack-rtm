@@ -18,22 +18,29 @@ var ChatArea = React.createClass({
             var msg = JSON.parse(evt.data);
             if (msg.type != 'hello')
                 self.setState({
-                    msg: msg
+                    messages: msg
                 });
         };
 
         ws.onclose = function () {
-            alert('Connection been lost. Trying reconnect')
-            this.slackConnect();
-        }
+            alert('Connection been lost. Trying reconnect');
+            self.slackConnectHandler();
+        };
+
+        return ws
     },
 
-    slackConnect: function (evt) {
-        evt.target.innerText = 'Connecting...';
-        this.props.webSocket.wsInit(this.slackConnected);
+    slackConnectHandler: function () {
+        if (this.state.ws instanceof WebSocket)
+            this.state.ws.close();
+        this.setState({
+            btnConText: 'Connecting...'
+        });
+        this.props.webSocket.init(this.slackConnected);
     },
 
     slackConnected: function (data) {
+        // called witihn ajax call at the moment of instantiating connection with slack
         var channels = data.channels.map(function (channel) {
             if (channel.is_member) {
                 return {
@@ -42,10 +49,11 @@ var ChatArea = React.createClass({
                 }
             }
         });
-        this.wsHandler(data.url);
         this.setState({
             connectedToSlack: true,
-            msg: channels
+            channels: channels,
+            ws: this.wsHandler(data.url),
+            btnConText: 'Disconnect'
         });
     },
 
@@ -53,7 +61,9 @@ var ChatArea = React.createClass({
         return {
             connectedToSlack: false,
             ws: {},
-            msg: []
+            channels: [],
+            messages: [],
+            btnConText: 'Connect'
         }
     },
 
@@ -61,10 +71,12 @@ var ChatArea = React.createClass({
         return (
             <div className='chat-wrapper'>
                 <ChatNavPane
+                    btnConText={this.state.btnConText}
                     connected={this.state.connectedToSlack}
-                    slackConnect={this.slackConnect}
+                    slackConnectHandler={this.slackConnectHandler}
                     ws={this.state.ws}
-                    msg={this.state.msg}
+                    channels={this.state.channels}
+                    messages={this.state.messages}
                 />
             </div>
         )

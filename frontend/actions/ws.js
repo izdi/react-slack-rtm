@@ -1,6 +1,6 @@
 'use strict';
 
-exports.wsInit = function wsInit(callback) {
+exports.init = function wsInit(callback) {
     var xhr = new XMLHttpRequest(),
         slackToken = document.getElementById('slack-container').getAttribute('data-st');
 

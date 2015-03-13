@@ -9,7 +9,12 @@ var TextArea = require('./ChatTextArea');
 
 var ChatNavPane = React.createClass({
 
+    handleChannelClick: function (e) {
+        console.log(e)
+    },
+
     render: function () {
+        var self = this;
 
         var btnHidden = {
             display: this.props.connected ? 'none': 'block'
@@ -19,14 +24,15 @@ var ChatNavPane = React.createClass({
             display: this.props.connected ? 'block': 'none'
         };
 
+        var renderChannels = function (chan, i) {
+            return <li onClick={self.handleChannelClick} data-chanid={chan.id} key={i}>{chan.name}</li>
+        };
+
         return (
             <div>
-                <button onClick={this.props.slackConnect} style={btnHidden}>Connect</button>
+                <button id='slack-con-btn' onClick={this.props.slackConnectHandler}>{this.props.btnConText}</button>
                 <div style={navHidden}>
-                    <ul>{this.props.msg.map(function (chan) {
-                            return <li key={chan.id}>{chan.name}</li>})
-                        }
-                    </ul>
+                    <ul>{this.props.channels.map(renderChannels)}</ul>
                 </div>
                 <TextArea
                     connected={this.props.connected}
