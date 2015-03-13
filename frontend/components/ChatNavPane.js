@@ -16,10 +16,6 @@ var ChatNavPane = React.createClass({
     render: function () {
         var self = this;
 
-        var btnHidden = {
-            display: this.props.connected ? 'none': 'block'
-        };
-
         var navHidden = {
             display: this.props.connected ? 'block': 'none'
         };
