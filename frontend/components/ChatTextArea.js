@@ -31,11 +31,14 @@ var TextArea = React.createClass({
         };
 
         return (
-            <div style={chatArea}>
+            <div className='chat-pane' style={chatArea}>
+                <article>&#35;{this.props.currentChan}</article>
+                <div className='messages'>
+                    <p><span>User:</span> Yeppeuyu</p>
+                </div>
                 <input type='text' id='text' />
                 <input type='button' onClick={this.sendData} value='Send' />
             </div>
-
         )
     }
 });

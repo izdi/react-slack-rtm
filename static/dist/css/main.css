@@ -1,0 +1,45 @@
+* {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 90%;
+}
+
+div {
+    height: 80%;
+}
+
+.nav-pane {
+    width: 200px;
+    float: left;
+    background-color: #75556e;
+}
+
+.channels > p {
+    font-family: 'Lato', sans-serif;
+    color: rgb(171, 155, 169);
+    margin: 0;
+    padding: 10px;
+}
+
+.active {
+    color: rgb(238, 231, 207) !important;
+    font-weight: bold;
+}
+
+.chat-pane {
+    width: 300px;
+    margin-left: 200px;
+    background-color: #fff8be;
+}
+
+.messages {
+    height: 92.5%;
+}
+
+#text {
+    width: 84%;
+}
