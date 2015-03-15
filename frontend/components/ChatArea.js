@@ -65,7 +65,6 @@ var ChatArea = React.createClass({
             connectedToSlack: true,
             channels: channels,
             ws: this.wsHandler(data.url),
-            btnConText: 'Disconnect',
             currentChan: currentChan
         });
     },
