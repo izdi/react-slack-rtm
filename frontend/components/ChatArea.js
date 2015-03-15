@@ -11,8 +11,9 @@ var TextArea = require('./ChatTextArea');
 
 var ChatArea = React.createClass({
     setCurrentChan: function (channel) {
+        var chan = '#' + channel;
         return this.setState({
-            currentChan: channel
+            currentChan: chan
         })
     },
 
@@ -52,7 +53,7 @@ var ChatArea = React.createClass({
             channels = data.channels.map(function (channel, i) {
             if (channel.is_member) {
                 if (i == 0) {
-                    currentChan = channel.name;
+                    currentChan = '#' + channel.name;
                 }
                 return {
                     id: channel.id,

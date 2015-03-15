@@ -32,7 +32,7 @@ var TextArea = React.createClass({
 
         return (
             <div className='chat-pane' style={chatArea}>
-                <article>&#35;{this.props.currentChan}</article>
+                <article>{this.props.currentChan}</article>
                 <div className='messages'>
                     <p><span>User:</span> Yeppeuyu</p>
                 </div>
