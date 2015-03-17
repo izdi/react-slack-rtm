@@ -25,6 +25,12 @@ div {
     padding: 10px;
 }
 
+.channels > p:hover {
+    color: rgb(202, 185, 200);
+    cursor: pointer;
+    background-color: rgba(237, 220, 235, 0.19);
+}
+
 .active {
     color: rgb(238, 231, 207) !important;
     font-weight: bold;

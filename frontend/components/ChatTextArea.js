@@ -8,8 +8,7 @@ var React = require('react');
 
 var TextArea = React.createClass({
     sendData: function () {
-        var channel = document.getElementById('channel'),
-            text = document.getElementById('text');
+        var text = document.getElementById('text').value;
 
         var data = {
             //id: 1,
@@ -23,6 +22,8 @@ var TextArea = React.createClass({
         this.props.ws.send(JSON.stringify(data));
 
     },
+
+
 
     render: function () {
 

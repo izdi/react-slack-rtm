@@ -26,6 +26,7 @@
     "gulp": "^3.8.11",
     "gulp-browserify": "^0.5.1",
     "gulp-concat": "^2.5.2",
+    "gulp-react": "^3.0.0",
     "react": "^0.12.2",
     "reactify": "^1.0.0"
   }

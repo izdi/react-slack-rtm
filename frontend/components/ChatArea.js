@@ -11,10 +11,16 @@ var TextArea = require('./ChatTextArea');
 
 var ChatArea = React.createClass({
     setCurrentChan: function (channel) {
-        var chan = '#' + channel;
         return this.setState({
-            currentChan: chan
+            currentChan: {
+                id: channel.id,
+                name: channel.name
+            }
         })
+    },
+
+    getCurrentChan: function () {
+        return (<article data-cid={this.state.currentChan.id}>{this.state.currentChan.name}</article>)
     },
 
     wsHandler: function (url) {
@@ -49,11 +55,12 @@ var ChatArea = React.createClass({
     slackConnected: function (data) {
         // callback at webSocket init at webSocketSlack.js
         var self = this,
-            currentChan,
+            currentChanName, currentChanId,
             channels = data.channels.map(function (channel, i) {
             if (channel.is_member) {
                 if (i == 0) {
-                    currentChan = '#' + channel.name;
+                    currentChanId = channel.id;
+                    currentChanName = '#' + channel.name;
                 }
                 return {
                     id: channel.id,
@@ -66,9 +73,13 @@ var ChatArea = React.createClass({
             connectedToSlack: true,
             channels: channels,
             ws: this.wsHandler(data.url),
-            currentChan: currentChan
+            currentChan: {
+                id: currentChanId,
+                name: currentChanName
+            }
         });
     },
+
 
     getInitialState: function () {
         return {
