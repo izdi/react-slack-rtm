@@ -76,13 +76,27 @@ var ChatArea = React.createClass({
         });
     },
 
+    getChannelLatest: function (id) {
+        var latest;
+        
+        this.state.channels.map(function (channel) {
+            if (channel.id == id) {
+                latest = channel.latest;
+            }
+        });
+
+        return latest;
+    },
+
     setCurrentChan: function (channel) {
-        return this.setState({
+        var latest = this.getChannelLatest(channel.id);
+        this.setState({
             currentChan: {
                 id: channel.id,
-                name: channel.name
+                name: channel.name,
+                latest: latest
             }
-        })
+        });
     },
 
     getCurrentChan: function () {
