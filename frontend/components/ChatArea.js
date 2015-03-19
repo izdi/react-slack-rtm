@@ -10,18 +10,6 @@ var TextArea = require('./ChatTextArea');
 
 
 var ChatArea = React.createClass({
-    setCurrentChan: function (channel) {
-        return this.setState({
-            currentChan: {
-                id: channel.id,
-                name: channel.name
-            }
-        })
-    },
-
-    getCurrentChan: function () {
-        return (<article data-cid={this.state.currentChan.id}>{this.state.currentChan.name}</article>)
-    },
 
     wsHandler: function (url) {
         var ws = new WebSocket(url),
@@ -44,50 +32,72 @@ var ChatArea = React.createClass({
     },
 
     slackConnectHandler: function () {
-        if (this.state.ws instanceof WebSocket)
-            this.state.ws.close();
         this.setState({
-            btnConText: 'Connecting...'
+            btnConnText: 'Connecting...'
         });
-        this.props.webSocket.init(this.slackConnected);
+        this.props.webSocket.init(this.slackConnectedCallback);
     },
 
-    slackConnected: function (data) {
-        // callback at webSocket init at webSocketSlack.js
+    slackConnectedCallback: function (data) {
+        // callback at webSocket init
         var self = this,
-            currentChanName, currentChanId,
+            currentChanName,
+            currentChanId,
+            currentChanLatest,
             channels = data.channels.map(function (channel, i) {
             if (channel.is_member) {
                 if (i == 0) {
                     currentChanId = channel.id;
                     currentChanName = '#' + channel.name;
+                    currentChanLatest = channel.latest;
                 }
+
                 return {
                     id: channel.id,
-                    name: channel.name
-                }
+                    name: channel.name,
+                    latest: channel.latest
+                };
             }
+        }),
+            users = data.users.map(function (user) {
+                return {id: user.id, name: user.name, avatar: user.profile.image_24};
         });
 
         this.setState({
             connectedToSlack: true,
             channels: channels,
-            ws: this.wsHandler(data.url),
+            users: users,
+            slackSocket: this.wsHandler(data.url),
             currentChan: {
                 id: currentChanId,
-                name: currentChanName
+                name: currentChanName,
+                latest: currentChanLatest
             }
         });
     },
 
+    setCurrentChan: function (channel) {
+        return this.setState({
+            currentChan: {
+                id: channel.id,
+                name: channel.name
+            }
+        })
+    },
+
+    getCurrentChan: function () {
+        return (<article data-cid={this.state.currentChan.id}>{this.state.currentChan.name}</article>)
+    },
 
     getInitialState: function () {
         return {
             connectedToSlack: false,
-            ws: {},
             channels: [],
             messages: [],
-            btnConText: 'Connect'
+            users: [],
+            btnConnText: 'Connect',
+            currentChan: {id: '', name: '', latest: {}},
+            slackSocket: {}
         }
     },
 
@@ -98,20 +108,19 @@ var ChatArea = React.createClass({
 
         return (
             <div>
-                <button onClick={this.slackConnectHandler} style={btnState}>{this.state.btnConText}</button>
+                <button onClick={this.slackConnectHandler} style={btnState}>{this.state.btnConnText}</button>
                 <ChatNavPane
-                    btnConText={this.state.btnConText}
                     connected={this.state.connectedToSlack}
-                    slackConnectHandler={this.slackConnectHandler}
-                    ws={this.state.ws}
-                    channels={this.state.channels}
                     setCurrentChan={this.setCurrentChan}
+                    channels={this.state.channels}
+                    slackConnectHandler={this.slackConnectHandler}
                 />
                 <TextArea
                     connected={this.state.connectedToSlack}
-                    ws={this.state.ws}
-                    messages={this.state.messages}
                     currentChan={this.state.currentChan}
+                    messages={this.state.messages}
+                    users={this.state.users}
+                    slackSocket={this.state.slackSocket}
                 />
             </div>
         )
