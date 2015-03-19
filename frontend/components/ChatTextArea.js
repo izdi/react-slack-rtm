@@ -11,7 +11,6 @@ var TextArea = React.createClass({
         var text = document.getElementById('text');
 
         var data = {
-            //id: 1,
             type: 'message',
             channel: 'C03VB3CFG',
             text: text.value
@@ -23,19 +22,19 @@ var TextArea = React.createClass({
 
     },
 
-    render: function () {
-        var latestMessage = this.props.currentChan.latest,
-            users = this.props.users;
+    currentUserMessages: function () {
 
-        var latestUser = users.map(function (user) {
+    },
+
+    render: function () {
+        var latestMessage = this.props.currentChan.latest, latestUserAvatar, latestUserName;
+
+        this.props.users.map(function (user) {
             if (latestMessage.user == user.id) {
-                return user
+                latestUserAvatar = user.avatar;
+                latestUserName = user.name;
             }
         });
-
-        if (latestUser.length && latestUser[0] !== undefined) {
-            latestUser = latestUser[0];
-        }
 
         var chatArea = {
             display: this.props.connected ? 'block': 'none'
@@ -45,10 +44,11 @@ var TextArea = React.createClass({
             <div className='chat-pane' style={chatArea}>
                 <article data-chanid={this.props.currentChan.id}>{this.props.currentChan.name}</article>
                 <div className='messages'>
-                    <LatestMessage
-                        latestUserAvatar={latestUser.avatar}
-                        latestUserName={latestUser.name}
-                        latestMessage={latestMessage.text} />
+                    <ChannelMessage
+                        latestUserAvatar={latestUserAvatar}
+                        latestUserName={latestUserName}
+                        latestMessage={latestMessage.text}
+                    />
                 </div>
                 <input type='text' id='text' />
                 <input type='button' onClick={this.sendData} value='Send' />
@@ -57,7 +57,7 @@ var TextArea = React.createClass({
     }
 });
 
-var LatestMessage = React.createClass({
+var ChannelMessage = React.createClass({
 
     render: function () {
         return <p><img src={this.props.latestUserAvatar}/><span>{this.props.latestUserName}:</span> {this.props.latestMessage}</p>

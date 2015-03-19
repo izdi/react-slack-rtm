@@ -32,18 +32,17 @@ var ChatArea = React.createClass({
     },
 
     slackConnectHandler: function () {
-        this.setState({
-            btnConnText: 'Connecting...'
-        });
         this.props.webSocket.init(this.slackConnectedCallback);
+        this.setState({
+            connText: ''
+        });
     },
 
     slackConnectedCallback: function (data) {
         // callback at webSocket init
         var self = this,
-            currentChanName,
-            currentChanId,
-            currentChanLatest,
+            currentChanName, currentChanId, currentChanLatest,
+            currentUser = data.self,
             channels = data.channels.map(function (channel, i) {
             if (channel.is_member) {
                 if (i == 0) {
@@ -60,8 +59,17 @@ var ChatArea = React.createClass({
             }
         }),
             users = data.users.map(function (user) {
+                if (user.id == currentUser.id) {
+                    currentUser = {
+                        id: user.id,
+                        name: user.name,
+                        avatar: user.profile.image_24
+                    };
+                }
                 return {id: user.id, name: user.name, avatar: user.profile.image_24};
         });
+
+        this.currentSlackUser(currentUser);
 
         this.setState({
             connectedToSlack: true,
@@ -76,9 +84,16 @@ var ChatArea = React.createClass({
         });
     },
 
+    currentSlackUser: function (user) {
+        if (this.activeUser === undefined) {
+            return this.activeUser = user;
+        }
+        return this.activeUser;
+    },
+
     getChannelLatest: function (id) {
         var latest;
-        
+
         this.state.channels.map(function (channel) {
             if (channel.id == id) {
                 latest = channel.latest;
@@ -90,6 +105,7 @@ var ChatArea = React.createClass({
 
     setCurrentChan: function (channel) {
         var latest = this.getChannelLatest(channel.id);
+
         this.setState({
             currentChan: {
                 id: channel.id,
@@ -103,31 +119,31 @@ var ChatArea = React.createClass({
         return (<article data-cid={this.state.currentChan.id}>{this.state.currentChan.name}</article>)
     },
 
+    componentDidMount: function () {
+        setTimeout(this.slackConnectHandler, 1000);
+    },
+
     getInitialState: function () {
         return {
             connectedToSlack: false,
             channels: [],
             messages: [],
             users: [],
-            btnConnText: 'Connect',
+            connText: 'Connecting...',
             currentChan: {id: '', name: '', latest: {}},
             slackSocket: {}
         }
     },
 
     render: function () {
-        var btnState = {
-            display: this.state.connectedToSlack ? 'none': 'block'
-        };
 
         return (
             <div>
-                <button onClick={this.slackConnectHandler} style={btnState}>{this.state.btnConnText}</button>
+                <span>{this.state.connText}</span>
                 <ChatNavPane
                     connected={this.state.connectedToSlack}
                     setCurrentChan={this.setCurrentChan}
                     channels={this.state.channels}
-                    slackConnectHandler={this.slackConnectHandler}
                 />
                 <TextArea
                     connected={this.state.connectedToSlack}
@@ -135,6 +151,7 @@ var ChatArea = React.createClass({
                     messages={this.state.messages}
                     users={this.state.users}
                     slackSocket={this.state.slackSocket}
+                    currentSlackUser={this.currentSlackUser}
                 />
             </div>
         )
