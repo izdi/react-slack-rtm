@@ -8,33 +8,37 @@ var React = require('react');
 
 var TextArea = React.createClass({
     sendData: function () {
-        var text = document.getElementById('text');
+        var text = document.getElementById('text'),
+            channel = document.querySelector('article').dataset.chanid;
 
-        var data = {
+        var slackMessage = {
             type: 'message',
-            channel: 'C03VB3CFG',
+            channel: channel,
             text: text.value
         };
 
+        // get current user & update slack message
+        var newMessage = this.props.currentSlackUser();
+        newMessage.text = slackMessage.text;
+
+        var messages = this.props.messages.concat([newMessage]);
+
         text.value = '';
 
-        this.props.slackSocket.send(JSON.stringify(data));
+        this.props.slackSocket.send(JSON.stringify(slackMessage));
+        this.setState({messages: messages});
 
     },
 
-    currentUserMessages: function () {
+    concatNewMessage: function () {
 
+    },
+
+    getInitialState: function () {
+        return {messages: this.props.messages}
     },
 
     render: function () {
-        var latestMessage = this.props.currentChan.latest, latestUserAvatar, latestUserName;
-
-        this.props.users.map(function (user) {
-            if (latestMessage.user == user.id) {
-                latestUserAvatar = user.avatar;
-                latestUserName = user.name;
-            }
-        });
 
         var chatArea = {
             display: this.props.connected ? 'block': 'none'
@@ -45,9 +49,7 @@ var TextArea = React.createClass({
                 <article data-chanid={this.props.currentChan.id}>{this.props.currentChan.name}</article>
                 <div className='messages'>
                     <ChannelMessage
-                        latestUserAvatar={latestUserAvatar}
-                        latestUserName={latestUserName}
-                        latestMessage={latestMessage.text}
+                        messages={this.state.messages}
                     />
                 </div>
                 <input type='text' id='text' />
@@ -60,7 +62,15 @@ var TextArea = React.createClass({
 var ChannelMessage = React.createClass({
 
     render: function () {
-        return <p><img src={this.props.latestUserAvatar}/><span>{this.props.latestUserName}:</span> {this.props.latestMessage}</p>
+        var sentMessages = function(message, i) {
+            return (
+                <span key={i}>
+                    <img src={message.avatar}/><span>{message.name}:</span> {message.text}
+                </span>
+            )
+        };
+
+        return <p>{this.props.messages.map(sentMessages)}</p>
     }
 
 });

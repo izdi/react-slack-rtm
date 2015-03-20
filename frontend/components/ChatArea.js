@@ -17,10 +17,12 @@ var ChatArea = React.createClass({
 
         ws.onmessage = function (evt) {
             var msg = JSON.parse(evt.data);
-            if (msg.type != 'hello')
-                self.setState({
-                    messages: msg
-                });
+            if (msg.type != 'hello') {
+                //self.setState({
+                //    messages: msg
+                //});
+            }
+
         };
 
         ws.onclose = function () {
@@ -40,34 +42,11 @@ var ChatArea = React.createClass({
 
     slackConnectedCallback: function (data) {
         // callback at webSocket init
-        var self = this,
-            currentChanName, currentChanId, currentChanLatest,
-            currentUser = data.self,
-            channels = data.channels.map(function (channel, i) {
-            if (channel.is_member) {
-                if (i == 0) {
-                    currentChanId = channel.id;
-                    currentChanName = '#' + channel.name;
-                    currentChanLatest = channel.latest;
-                }
 
-                return {
-                    id: channel.id,
-                    name: channel.name,
-                    latest: channel.latest
-                };
-            }
-        }),
-            users = data.users.map(function (user) {
-                if (user.id == currentUser.id) {
-                    currentUser = {
-                        id: user.id,
-                        name: user.name,
-                        avatar: user.profile.image_24
-                    };
-                }
-                return {id: user.id, name: user.name, avatar: user.profile.image_24};
-        });
+        var currentUser = data.self;
+        var channels = this.parseChannels(data.channels);
+        var users = this.parseUsers(data.users, currentUser);
+        var messages = this.parseLatestMessages(users);
 
         this.currentSlackUser(currentUser);
 
@@ -75,12 +54,56 @@ var ChatArea = React.createClass({
             connectedToSlack: true,
             channels: channels,
             users: users,
-            slackSocket: this.wsHandler(data.url),
-            currentChan: {
-                id: currentChanId,
-                name: currentChanName,
-                latest: currentChanLatest
+            messages: messages,
+            slackSocket: this.wsHandler(data.url)
+        });
+    },
+
+    parseUsers: function (users, currentUser) {
+        var self = this;
+
+        return users.map(function (user) {
+            if (user.id == currentUser.id) {
+                self.currentSlackUser({
+                    id: user.id,
+                    name: user.name,
+                    avatar: user.profile.image_24
+                });
             }
+            return {id: user.id, name: user.name, avatar: user.profile.image_24};
+        });
+    },
+
+    parseChannels: function (channels) {
+        var self = this;
+
+        return channels.map(function (channel, i) {
+            if (channel.is_member) {
+                if (i == 0) {
+                    self.getCurrentChanLatestData(channel);
+                }
+                return {
+                    id: channel.id,
+                    name: channel.name,
+                    latest: channel.latest
+                };
+            }
+        });
+    },
+
+    parseLatestMessages: function (users) {
+        var latestMessage = this.state.currentChan.latest;
+        var messages = users.map(function (user) {
+            if (latestMessage.user == user.id) {
+                return {
+                    avatar: user.avatar,
+                    name: user.name,
+                    text: latestMessage.text
+                }
+            }
+        });
+        return messages.filter(function (msg) {
+            return msg !== undefined
         });
     },
 
@@ -94,13 +117,11 @@ var ChatArea = React.createClass({
     getChannelLatest: function (id) {
         var latest;
 
-        this.state.channels.map(function (channel) {
+        this.state.channels.filter(function (channel) {
             if (channel.id == id) {
-                latest = channel.latest;
+                return channel.latest;
             }
         });
-
-        return latest;
     },
 
     setCurrentChan: function (channel) {
@@ -117,6 +138,16 @@ var ChatArea = React.createClass({
 
     getCurrentChan: function () {
         return (<article data-cid={this.state.currentChan.id}>{this.state.currentChan.name}</article>)
+    },
+
+    getCurrentChanLatestData: function (channel) {
+        this.setState({
+            currentChan: {
+                id: channel.id,
+                name: '#' + channel.name,
+                latest: channel.latest
+            }
+        });
     },
 
     componentDidMount: function () {
