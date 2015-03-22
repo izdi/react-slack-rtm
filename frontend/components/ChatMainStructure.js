@@ -58,7 +58,7 @@ var ChatMainStructure = React.createClass({
         return channels.map(function (channel, i) {
             if (channel.is_member) {
                 if (i == 0) {
-                    self.setCurrentChan(channel);
+                    self.setCurrentChan(channel.id);
                 }
                 return {
                     id: channel.id,
@@ -78,7 +78,7 @@ var ChatMainStructure = React.createClass({
             users.map(function (user) {
                 if (currentUser == user.id) {
                     self.setCurrentSlackUser({
-                        id: user.id,
+                        user: user.id,
                         name: user.name,
                         avatar: user.profile.image_24
                     });
@@ -104,13 +104,17 @@ var ChatMainStructure = React.createClass({
         });
     },
 
+    getCurrentSlackUser: function () {
+        return this.activeUser
+    },
+
     setCurrentSlackUser: function (user) {
         this.activeUser = user;
     },
 
     setCurrentChan: function (channel) {
         this.setState({
-            currentChan: channel.id
+            currentChan: channel
         })
     },
 
@@ -139,12 +143,13 @@ var ChatMainStructure = React.createClass({
                     connected={this.state.connectedToSlack}
                     channels={this.state.channels}
                     getSingleChannelMessages={this.getSingleChannelMessages}
+
                 />
                 <TextArea
                     connected={this.state.connectedToSlack}
                     channels={this.state.channels}
                     slackSocket={this.state.slackSocket}
-                    currentSlackUser={this.currentSlackUser}
+                    getCurrentSlackUser={this.getCurrentSlackUser}
                     currentChan={this.state.currentChan}
                 />
             </div>

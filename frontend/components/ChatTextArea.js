@@ -7,27 +7,42 @@
 var React = require('react');
 
 var TextArea = React.createClass({
-    sendData: function () {
+    sendData: function (e) {
         var text = document.getElementById('text'),
-            channel = document.querySelector('article').dataset.chanid;
+            currentChan = this.props.currentChan;
 
         var slackMessage = {
             type: 'message',
-            channel: channel,
+            channel: currentChan,
             text: text.value
         };
 
         // get current user & update slack message
-        var newMessage = this.props.currentSlackUser();
+        var newMessage = this.props.getCurrentSlackUser();
         newMessage.text = slackMessage.text;
 
-        var messages = this.props.messages.concat([newMessage]);
+        var messages = this.state.messages.map(function (channel) {
+            if (channel == currentChan) {
+                channel.messages.push(newMessage)
+            }
+            return channel
+        });
 
         text.value = '';
 
         this.props.slackSocket.send(JSON.stringify(slackMessage));
 
         this.setState({messages: messages});
+    },
+
+    componentWillReceiveProps: function (nextProps) {
+        this.setState({
+            messages: nextProps.channels
+        })
+    },
+
+    getInitialState: function () {
+        return {messages: this.props.channels}
     },
 
     render: function () {
@@ -40,11 +55,13 @@ var TextArea = React.createClass({
             <div className='chat-pane' style={chatArea}>
                 <div className='messages'>
                     <ChannelMessage
-                        messages={this.props.channels} currentChan={this.props.currentChan}
+                        messages={this.state.messages} currentChan={this.props.currentChan}
                     />
                 </div>
-                <input type='text' id='text' />
-                <input type='button' onClick={this.sendData} value='Send' />
+                <form>
+                    <input type='text' id='text' />
+                    <input type='button' onClick={this.sendData} value='Send' />
+                </form>
             </div>
         )
     }
