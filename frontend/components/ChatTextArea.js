@@ -9,7 +9,8 @@ var React = require('react');
 var TextArea = React.createClass({
     sendData: function (e) {
         var text = document.getElementById('text'),
-            currentChan = this.props.currentChan;
+            currentChan = this.props.currentChan,
+            self = this;
 
         var slackMessage = {
             type: 'message',
@@ -17,13 +18,17 @@ var TextArea = React.createClass({
             text: text.value
         };
 
-        // get current user & update slack message
-        var newMessage = this.props.getCurrentSlackUser();
-        newMessage.text = slackMessage.text;
+        var currentUser = self.props.getCurrentSlackUser();
 
+        // get current user & update slack message
         var messages = this.state.messages.map(function (channel) {
-            if (channel == currentChan) {
-                channel.messages.push(newMessage)
+            if (channel.id == currentChan) {
+                channel.messages.push({
+                    avatar: currentUser.avatar,
+                    name: currentUser.name,
+                    text: text.value,
+                    user: currentUser.user
+                })
             }
             return channel
         });
@@ -53,15 +58,13 @@ var TextArea = React.createClass({
 
         return (
             <div className='chat-pane' style={chatArea}>
-                <div className='messages'>
+                <div className='messages-wrapper'>
                     <ChannelMessage
                         messages={this.state.messages} currentChan={this.props.currentChan}
                     />
                 </div>
-                <form>
-                    <input type='text' id='text' />
-                    <input type='button' onClick={this.sendData} value='Send' />
-                </form>
+                <input type='text' id='text' />
+                <input type='button' onClick={this.sendData} value='Send' />
             </div>
         )
     }
@@ -82,7 +85,7 @@ var ChannelMessage = React.createClass({
         var sentMessages = function(message, i) {
 
             return (
-                <span key={i}>
+                <span className='messages' key={i}>
                     <img src={message.avatar}/><span>{message.name}:</span> {message.text}
                 </span>
             )

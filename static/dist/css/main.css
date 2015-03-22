@@ -42,8 +42,12 @@ div {
     background-color: #fff8be;
 }
 
-.messages {
+.messages-wrapper {
     height: 92.5%;
+}
+
+.messages {
+    display: table;
 }
 
 #text {
