@@ -20,7 +20,8 @@ var ChatNavPane = React.createClass({
         };
 
         Array.prototype.map.call(channelsParagraphs, dropActive);
-        this.props.setCurrentChan({id: clickedBtn.dataset.chanid, name: clickedBtn.innerText});
+
+        this.getSingleChannelMessages(clickedBtn.dataset.chanid);
     },
 
     render: function () {

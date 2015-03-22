@@ -26,16 +26,8 @@ var TextArea = React.createClass({
         text.value = '';
 
         this.props.slackSocket.send(JSON.stringify(slackMessage));
+
         this.setState({messages: messages});
-
-    },
-
-    concatNewMessage: function () {
-
-    },
-
-    getInitialState: function () {
-        return {messages: this.props.messages}
     },
 
     render: function () {
@@ -46,10 +38,9 @@ var TextArea = React.createClass({
 
         return (
             <div className='chat-pane' style={chatArea}>
-                <article data-chanid={this.props.currentChan.id}>{this.props.currentChan.name}</article>
                 <div className='messages'>
                     <ChannelMessage
-                        messages={this.state.messages}
+                        messages={this.props.channels} currentChan={this.props.currentChan}
                     />
                 </div>
                 <input type='text' id='text' />
@@ -62,7 +53,17 @@ var TextArea = React.createClass({
 var ChannelMessage = React.createClass({
 
     render: function () {
+        var self = this,
+            channelMessages = [];
+
+        this.props.messages.map(function (channel) {
+            if (self.props.currentChan == channel.id) {
+                channelMessages = channel.messages
+            }
+        });
+
         var sentMessages = function(message, i) {
+
             return (
                 <span key={i}>
                     <img src={message.avatar}/><span>{message.name}:</span> {message.text}
@@ -70,9 +71,8 @@ var ChannelMessage = React.createClass({
             )
         };
 
-        return <p>{this.props.messages.map(sentMessages)}</p>
+        return <p>{channelMessages.map(sentMessages)}</p>
     }
-
 });
 
 module.exports = TextArea;
