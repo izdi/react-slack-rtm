@@ -5,7 +5,7 @@ Thanks to Slack for reach API https://api.slack.com.
 
 **Note**: at this moment implemented only messaging functionality between channels.  
 
-##### Installation 
+### Installation 
 
 Clone the project `git clone https://github.com/izdi/djslack.git`
 
