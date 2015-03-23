@@ -1,4 +1,4 @@
-# Realtime Slack integration for Django projects using React.
+# Real time Slack integration for Django projects using React. (alpha)
 
 Django handles OAuth and stores user token. React renders layout. 
 Thanks to Slack for reach API https://api.slack.com.
