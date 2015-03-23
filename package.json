@@ -2,7 +2,7 @@
   "name": "djslack",
   "version": "0.0.1",
   "description": "Slack integration for Django projects using ReactJS as a view layer.",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,7 +26,6 @@
     "gulp": "^3.8.11",
     "gulp-browserify": "^0.5.1",
     "gulp-concat": "^2.5.2",
-    "gulp-react": "^3.0.0",
     "react": "^0.12.2",
     "reactify": "^1.0.0"
   }

@@ -1,11 +1,10 @@
 # Realtime Slack integration for Django projects using React. 
   
-### Demo project (0.1) which allows Django users to use internal messaging system (group) to interact within slack domain  
+### Demo project representing Django as backend for OAuth and storing user token. Frontend layer represented by React
 
 #### Installation 
-```
-sudo pip install -r requirements.txt
-sudo npm install
-gulp
-gulp watch
-```
+
+1. `sudo pip install -r requirements.txt` to install python dependencies
+2. `sudo npm install` to install javascript dependencies
+3. `gulp` to build react dist
+
