@@ -423,3 +423,77 @@ Small Device Styles
   }
 
 }
+
+* {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#slack-react-main {
+    height: 300px;
+    width: 475px;
+}
+
+.nav-pane {
+    width: 160px;
+    float: left;
+    background-color: #75556e;
+    height: 100%;
+}
+
+.channels > p {
+    font-family: 'Lato', sans-serif;
+    color: rgb(171, 155, 169);
+    margin: 0;
+    padding: 10px;
+}
+
+.channels > p:hover {
+    color: rgb(202, 185, 200);
+    cursor: pointer;
+    background-color: rgba(237, 220, 235, 0.19);
+}
+
+.active {
+    color: rgb(238, 231, 207) !important;
+    font-weight: bold;
+}
+
+.chat-pane {
+    position: relative;
+    float: right;
+    width: 315px;
+    background-color: #fff8be;
+    height: 100%;
+}
+
+.slack-chat-pane-buttons {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+}
+
+.messages-wrapper {
+    position: relative;
+    height: 100%;
+}
+
+.messages-wrapper > p {
+    margin: 0;
+}
+
+.slack-messages {
+    padding-bottom: 20px;
+    overflow: auto;
+    height: 100%;
+}
+
+.slack-single-messages {
+    display: table;
+    word-break: break-all;
+}
+
+#text {
+    width: 85%;
+}
