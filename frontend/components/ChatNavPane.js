@@ -27,10 +27,6 @@ var ChatNavPane = React.createClass({
     render: function () {
         var self = this;
 
-        var navHidden = {
-            display: this.props.connected ? 'block': 'none'
-        };
-
         var renderChannels = function (chan, i) {
             var channel = '#' + chan.name;
             if (i == 0) {
@@ -40,7 +36,7 @@ var ChatNavPane = React.createClass({
         };
 
         return (
-            <div className='nav-pane' style={navHidden}>
+            <div className='nav-pane'>
                 <div className='channels'>
                     {this.props.channels.map(renderChannels)}
                 </div>

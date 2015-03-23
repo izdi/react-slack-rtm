@@ -7,7 +7,13 @@
 var React = require('react');
 
 var TextArea = React.createClass({
-    sendData: function (e) {
+    handleKeyUp: function(e) {
+        if (e.which == 13) {
+            this.sendData();
+        }
+    },
+
+    sendData: function () {
         var text = document.getElementById('text'),
             currentChan = this.props.currentChan,
             self = this;
@@ -52,19 +58,15 @@ var TextArea = React.createClass({
 
     render: function () {
 
-        var chatArea = {
-            display: this.props.connected ? 'block': 'none'
-        };
-
         return (
-            <div className='chat-pane' style={chatArea}>
-                <div className='messages-wrapper'>
-                    <ChannelMessage
-                        messages={this.state.messages} currentChan={this.props.currentChan}
-                    />
+            <div className='chat-pane'>
+                <ChannelMessage
+                    messages={this.state.messages} currentChan={this.props.currentChan}
+                />
+                <div className='slack-chat-pane-buttons'>
+                    <input type='text' id='text' onKeyUp={this.handleKeyUp} />
+                    <input type='button' value='Send' onClick={this.sendData} />
                 </div>
-                <input type='text' id='text' />
-                <input type='button' onClick={this.sendData} value='Send' />
             </div>
         )
     }
@@ -85,13 +87,13 @@ var ChannelMessage = React.createClass({
         var sentMessages = function(message, i) {
 
             return (
-                <span className='messages' key={i}>
+                <span className='slack-single-messages' key={i}>
                     <img src={message.avatar}/><span>{message.name}:</span> {message.text}
                 </span>
             )
         };
 
-        return <p>{channelMessages.map(sentMessages)}</p>
+        return <div className='slack-messages'>{channelMessages.map(sentMessages)}</div>
     }
 });
 

@@ -4,18 +4,16 @@
     box-sizing: border-box;
 }
 
-body, html {
-    height: 90%;
-}
-
-div {
-    height: 80%;
+#slack-react-main {
+    position: absolute;
+    height: 300px;
 }
 
 .nav-pane {
-    width: 200px;
+    width: 160px;
     float: left;
     background-color: #75556e;
+    height: 100%;
 }
 
 .channels > p {
@@ -37,19 +35,39 @@ div {
 }
 
 .chat-pane {
-    width: 300px;
-    margin-left: 200px;
+    position: relative;
+    float: right;
+    width: 315px;
     background-color: #fff8be;
+    height: 100%;
+}
+
+.slack-chat-pane-buttons {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
 }
 
 .messages-wrapper {
-    height: 92.5%;
+    position: relative;
+    height: 100%;
 }
 
-.messages {
+.messages-wrapper > p {
+    margin: 0;
+}
+
+.slack-messages {
+    padding-bottom: 20px;
+    overflow: auto;
+    height: 100%;
+}
+
+.slack-single-messages {
     display: table;
+    word-break: break-all;
 }
 
 #text {
-    width: 84%;
+    width: 85%;
 }

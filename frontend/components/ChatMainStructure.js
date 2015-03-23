@@ -13,16 +13,22 @@ var ChatMainStructure = React.createClass({
 
     wsHandler: function (url) {
         var ws = new WebSocket(url),
+            typesFilter = ['hello', 'presence_change', 'user_typing'],
+            lastUserMessageSeen = false,
             self = this;
 
         ws.onmessage = function (evt) {
             var msg = JSON.parse(evt.data);
-            if (msg.type != 'hello') {
-                //self.setState({
-                //    messages: msg
-                //});
+            if (typesFilter.indexOf(msg.type) == -1) {
+                if (lastUserMessageSeen) {
+                    console.log(msg);
+                    self.setState({
+                        channels: self.setNewChannelMessage(msg)
+                    });
+                } else {
+                    lastUserMessageSeen = true;
+                }
             }
-
         };
 
         ws.onclose = function () {
@@ -38,16 +44,18 @@ var ChatMainStructure = React.createClass({
     },
 
     slackConnectedCallback: function (data) {
-        // callback at webSocket init
+        // callback at webSocket.init
+        var currentUser = data.self,
+            teamMembers = data.users;
 
-        var currentUser = data.self;
-        var self = this;
         var initialChannels = this.parseChannels(data.channels);
-        var channelsWithMessages = this.getAllChannelsMessages(initialChannels, data.users, currentUser.id);
+        var channelsWithMessages = this.getAllChannelsMessages(initialChannels, teamMembers,
+                                                               currentUser.id);
 
         this.setState({
             connectedToSlack: true,
             channels: channelsWithMessages,
+            teamMembers: teamMembers,
             slackSocket: this.wsHandler(data.url)
         });
     },
@@ -56,16 +64,31 @@ var ChatMainStructure = React.createClass({
         var self = this;
 
         return channels.map(function (channel, i) {
-            if (channel.is_member) {
-                if (i == 0) {
-                    self.setCurrentChan(channel.id);
-                }
-                return {
-                    id: channel.id,
-                    name: channel.name,
-                    latest: channel.latest
-                };
+
+            if (i == 0) {
+                self.setCurrentChan(channel.id);
             }
+            return {
+                id: channel.id,
+                name: channel.name,
+                latest: channel.latest
+            };
+        });
+    },
+
+    setNewChannelMessage: function (slackEvent) {
+        var member = this.getUsers(slackEvent.user);
+
+        return this.state.channels.map(function (channel) {
+            if (channel.id == slackEvent.channel) {
+                channel.messages.push({
+                    avatar: member.avatar,
+                    user: slackEvent.user,
+                    name: member.name,
+                    text: slackEvent.text
+                })
+            }
+            return channel
         });
     },
 
@@ -104,6 +127,23 @@ var ChatMainStructure = React.createClass({
         });
     },
 
+    getUsers: function (user) {
+        var name, avatar;
+
+        this.state.teamMembers.map(function (member) {
+            if (member.id == user) {
+                name = member.name;
+                avatar = member.profile.image_24;
+            }
+        });
+
+        return {name: name, avatar: avatar}
+    },
+
+    setUsers: function () {
+
+    },
+
     getCurrentSlackUser: function () {
         return this.activeUser
     },
@@ -115,7 +155,7 @@ var ChatMainStructure = React.createClass({
     setCurrentChan: function (channel) {
         this.setState({
             currentChan: channel
-        })
+        });
     },
 
     getSingleChannelMessages: function (channel) {
@@ -137,16 +177,18 @@ var ChatMainStructure = React.createClass({
 
     render: function () {
 
+        var chatState = {
+            display: this.state.connectedToSlack ? 'block': 'none'
+        };
+
         return (
-            <div>
+            <div id='slack-react-main' style={chatState}>
                 <ChatNavPane
-                    connected={this.state.connectedToSlack}
                     channels={this.state.channels}
                     getSingleChannelMessages={this.getSingleChannelMessages}
 
                 />
                 <TextArea
-                    connected={this.state.connectedToSlack}
                     channels={this.state.channels}
                     slackSocket={this.state.slackSocket}
                     getCurrentSlackUser={this.getCurrentSlackUser}
