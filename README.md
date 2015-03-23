@@ -3,7 +3,7 @@
 Django handles OAuth and stores user token. React renders layout. 
 Thanks to Slack for reach API https://api.slack.com.
 
-Note: at this momemnt implemented only messaging functionality.  
+**Note**: at this moment implemented only messaging functionality between channels.  
 
 ##### Installation 
 
