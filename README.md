@@ -1,7 +1,7 @@
 # Django and ReactJS using Slack RTM API. 
 
 Mostly Django only serves routes to pages and handles OAuth storing users tokens.
-React builds main chat application. You can also use this project as example of how to use ReactJS with Django.
+React builds main chat application. You can also use this project as example of how to integrate ReactJS with your Django projects.
 Thanks to Slack for reach API https://api.slack.com.
 
 **Note**: at this moment implemented only messaging functionality between channels.  
