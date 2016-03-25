@@ -10,6 +10,6 @@ Thanks to Slack for reach API documentation https://api.slack.com.
 
 Clone the project `git clone https://github.com/izdi/djslack.git`
 
-1. `sudo pip install -r requirements.txt` to install python dependencies
-2. `sudo npm install` to install javascript dependencies
+1. `pip install -r requirements.txt` to install python dependencies
+2. `npm install` to install javascript dependencies
 3. `gulp` to build react dist
